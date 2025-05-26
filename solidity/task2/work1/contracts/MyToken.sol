@@ -48,9 +48,9 @@ contract MyToken {
         supplies -= _amount;
     }
 
-    // 调用者查询自己账户的余额
-    function blanceOf() external view returns(uint256) {
-        return blances[msg.sender];
+    // 调用者查询_account账户的余额
+    function balanceOf(address _account) external view returns(uint256) {
+        return blances[_account];
     }
 
     // 调用者，将自己_amount数量的前转给接收者_to
@@ -62,6 +62,8 @@ contract MyToken {
         blances[msg.sender] -= _amount;
         // 增加接收者的账户余额
         blances[_to] += _amount;
+        
+        //payable(_to).transfer(_amount);
 
         emit Transfer(msg.sender, _to, _amount);
 
@@ -81,7 +83,7 @@ contract MyToken {
     }
 
     // 查询账户_owner给调用者授予了多少可提取金额
-    function getAllowance(address _from, address _to) external view returns (uint256) {
+    function allowance(address _from, address _to) external view returns (uint256) {
         require(msg.sender == _from || msg.sender == _to, "The caller should be the _from or _to");
         return allowances[_from][_to];
     }
@@ -102,6 +104,10 @@ contract MyToken {
         emit Transfer(_from, _to, _amount);
 
         return true;
+    }
+
+    function totalSupply() external view returns (uint256) {
+        return supplies;
     }
 
 }
