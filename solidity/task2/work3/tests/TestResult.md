@@ -5,7 +5,7 @@
 
 ## 测试结果
 ### donate
-![](.\img\donate1.png)  
+![](./img/donate1.png)  
 ![](.\img\donate2.png)  
 ### 捐献排名
 ![](.\img\getRanks.png)  
