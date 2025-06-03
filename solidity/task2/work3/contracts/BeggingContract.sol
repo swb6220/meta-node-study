@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/timestamp"
-
 contract BeggingContract {
 
     mapping(address user => uint256 amount) donateAmounts;
@@ -31,17 +29,17 @@ contract BeggingContract {
 
     receive() external payable { }
 
+    fallback() external payable { }
+
     function setDonateTime(uint256 startTime, uint256 period) public ownerable {
         require(msg.sender == owner, "The caller should be the conctract owner.");
-        require(startTime >= block.timestamp && (period > 0), "Illegal parameters for setDonateTime");
-         donateStartTime = startTime;
-         donatePeriod = period;
+        // require(startTime >= block.timestamp && (period > 0), "Illegal parameters for setDonateTime");
+        donateStartTime = startTime;
+        donatePeriod = period;
     }
 
-    function getDonteTime() public view returns (string startTime, string endTime) {
-        TimestampConverter converter = new TimestampConverter(donateStartTime, donatePeriod);
-        (string memory start, string memory end) = converter.getTimeStrings();
-        return (start, end);
+    function getDonteTime() public view returns (uint256 startTime, uint256 endTime) {
+        return (donateStartTime, donatePeriod);
     }
 
     function _setRanks(address user, uint256 amount) internal {
@@ -62,14 +60,32 @@ contract BeggingContract {
         rank.donateUser = user;
     }
 
+    function isValidDonateTime(uint256 startTime, uint256 period) internal view returns (bool) {
+        require(period > 0, "The period should be greater than zero.");
+        if (block.timestamp < startTime) {
+            return false;
+        }
+
+        if(block.timestamp > startTime + period) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function getTimestamp() public view returns (uint256 timestamp) {
+        return block.timestamp;
+    }
+
     function donate(string memory message) public payable {
         require(msg.value > 0, "The donated amount must be greater than zero.");
+        require(isValidDonateTime(donateStartTime, donatePeriod), "It is not valid donate time.");
         donateAmounts[msg.sender] += msg.value;
         if(bytes(message).length > 0) {
             donateMessage[msg.sender] = message;
         }
 
-        _setRanks(msg.sender, msg.value);
+        _setRanks(msg.sender, donateAmounts[msg.sender]);
 
         emit Donation(msg.sender, message);
     }
