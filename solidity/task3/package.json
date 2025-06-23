@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@chainlink/contracts": "^1.4.0",
+    "@chainlink/contracts-ccip": "^1.6.0",
+    "@openzeppelin/contracts": "^5.3.0"
+  },
+  "devDependencies": {
+    "@chainlink/env-enc": "^1.0.5",
+    "@chainlink/local": "^0.2.5",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@remix-project/remixd": "^0.6.0",
+    "hardhat": "^2.24.2",
+    "hardhat-deploy": "^1.0.3",
+    "import": "^0.0.6"
+  }
+}
